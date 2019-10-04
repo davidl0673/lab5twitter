@@ -5,7 +5,7 @@ const Register = () => {
   return (
     <div>
       <h1>Register:</h1>
-      <RegisterUserForm redirect="/" />
+      <RegisterUserForm redirect="/Home" />
     </div>
   )
 }
