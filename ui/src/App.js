@@ -9,6 +9,7 @@ import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/Login";
 import Logout from './components/Logout';
+import Register from "./components/Register";
 
 const NavBar = () => {
   const { 0: token } = useGlobal("token");
@@ -22,11 +23,18 @@ const NavBar = () => {
           </Link>
         </li>
         {!token && (
-          <li>
-            <Link type="li" to="/login">
-              Login
+          <>
+            <li>
+              <Link type="li" to="/login">
+                Login
             </Link>
-          </li>
+            </li>
+            <li>
+              <Link type="li" to="/sign-up">
+                Register
+            </Link>
+            </li>
+          </>
         )}
         {token && (
           <>
@@ -51,6 +59,7 @@ function App() {
       <NavBar />
       <Route path="/" exact component={Home} />
       <Route path="/login" component={Login} />
+      <Route path="/sign-up" component={Register} />
       <PrivateRoute path="/profile" component={Profile} />
       {/* <Route component={NotFound} /> */}
     </Router>
