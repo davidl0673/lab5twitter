@@ -1,12 +1,11 @@
 import React from "reactn";
 
-const Tweet = () => {
-    return (
-        <form>
-            <input type="text" placeholder="tweet it up" />
-            <button>submit</button>
-        </form>
-    )
-}
+const Tweet = props => {
+  if (props.message.isSubmitted) {
+    return <div> {props.message.message}</div>;
+  } else {
+    return null;
+  }
+};
 
 export default Tweet;

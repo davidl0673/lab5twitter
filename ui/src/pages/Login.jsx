@@ -9,5 +9,7 @@ const Login = () => {
     </div>
   )
 }
+console.log("hi")
+
 
 export default Login;

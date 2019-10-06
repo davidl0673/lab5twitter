@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 
 const AuthController = require("./controllers/auth.controller");
+const PostController = require("./controllers/post.controller");
 
 const app = express();
 app.use(cors());
@@ -11,8 +12,9 @@ app.use(morgan("tiny"));
 app.use(express.json());
 
 app.use("/auth", AuthController);
+app.use("/post", PostController);
 
-const connectDatabase = async (databaseName="fullstackjs-boilerplate", hostname="localhost") => {
+const connectDatabase = async (databaseName="Twitter-clone", hostname="localhost") => {
   const database = await mongoose.connect(
     `mongodb://${hostname}/${databaseName}`,
     {

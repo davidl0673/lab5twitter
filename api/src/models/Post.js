@@ -10,7 +10,7 @@ const postSchema = Schema({
     },
     message: {
       type: String,
-      required: true,
+     
     },
   }, 
   );
