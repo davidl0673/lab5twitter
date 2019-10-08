@@ -12,7 +12,7 @@ const TweetForm = props => {
     });
   };
 
-  console.log(message.message);
+  // console.log(message.message);
   return (
     <>
       <div>Tweet it up!</div>

@@ -8,7 +8,7 @@ import Home from "./pages/Home";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import Login from "./pages/Login";
-import Logout from './components/Logout';
+import Logout from "./components/Logout";
 import Register from "./components/Register";
 
 const NavBar = () => {
@@ -27,12 +27,12 @@ const NavBar = () => {
             <li>
               <Link type="li" to="/login">
                 Login
-            </Link>
+              </Link>
             </li>
             <li>
               <Link type="li" to="/sign-up">
                 Register
-            </Link>
+              </Link>
             </li>
           </>
         )}
@@ -55,14 +55,16 @@ const NavBar = () => {
 
 function App() {
   return (
-    <Router>
-      <NavBar />
-      <Route path="/" exact component={Home} />
-      <Route path="/login" component={Login} />
-      <Route path="/sign-up" component={Register} />
-      <PrivateRoute path="/profile" component={Profile} />
-      {/* <Route component={NotFound} /> */}
-    </Router>
+    <>
+      <Router>
+        <NavBar />
+        <Route path="/" exact component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/sign-up" component={Register} />
+        <PrivateRoute path="/profile" component={Profile} />
+        {/* <Route component={NotFound} /> */}
+      </Router>
+    </>
   );
 }
 
