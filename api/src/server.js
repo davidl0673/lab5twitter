@@ -5,6 +5,7 @@ const cors = require("cors");
 
 const AuthController = require("./controllers/auth.controller");
 const PostController = require("./controllers/post.controller");
+const UserController = require("./controllers/user.controller");
 
 const app = express();
 app.use(cors());
@@ -13,8 +14,12 @@ app.use(express.json());
 
 app.use("/auth", AuthController);
 app.use("/post", PostController);
+app.use("/users", UserController);
 
-const connectDatabase = async (databaseName="Twitter-clone", hostname="localhost") => {
+const connectDatabase = async (
+  databaseName = "Twitter-clone",
+  hostname = "localhost"
+) => {
   const database = await mongoose.connect(
     `mongodb://${hostname}/${databaseName}`,
     {
@@ -24,19 +29,21 @@ const connectDatabase = async (databaseName="Twitter-clone", hostname="localhost
     }
   );
 
-  if(process.env.ENV !== "test") 
-    console.log(`🗑️ Database connected at mongodb://${hostname}/${databaseName}...`)
+  if (process.env.ENV !== "test")
+    console.log(
+      `🗑️ Database connected at mongodb://${hostname}/${databaseName}...`
+    );
 
   return database;
-}
+};
 
-const startServer = (hostname="0.0.0.0", port=1337) => {
+const startServer = (hostname = "0.0.0.0", port = 1337) => {
   app.listen(port, hostname, async () => {
     await connectDatabase();
-    if(process.env.ENV !== "test") 
-      console.log(`🚀 Server started at ${hostname}:${port}...`)
+    if (process.env.ENV !== "test")
+      console.log(`🚀 Server started at ${hostname}:${port}...`);
   });
-}
+};
 
 module.exports = {
   app,

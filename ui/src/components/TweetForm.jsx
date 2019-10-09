@@ -1,30 +1,51 @@
-import React from "reactn";
+import React, { useGlobal, useState } from "reactn";
+import client from "../api/client";
 
 const TweetForm = props => {
-  const { message, setMessage, handleSubmit } = props;
+  const { 0: token } = useGlobal("token");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState(null);
 
-  // const [loggedIn, setLoggedIn] = useState(false);
+  const postTweet = async e => {
+    e.preventDefault();
 
-  const handleChange = e => {
-    setMessage({
-      ...message,
-      [e.target.name]: e.target.value
-    });
+    try {
+      setError(null);
+      const { data } = await client.post(
+        "/post/",
+        {
+          message
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
+      setMessage("");
+      console.log(data);
+
+      if (props.onSuccess) props.onSuccess(data);
+    } catch (error) {
+      setError("Tweet needs to be between 3 and 150 characters long!");
+    }
   };
 
-  // console.log(message.message);
   return (
     <>
       <div>Tweet it up!</div>
-      <form onSubmit={handleSubmit}>
+      {error && (
+        <div>
+          <em>{error}</em>
+        </div>
+      )}
+      <form onSubmit={postTweet}>
         <input
           type="text"
-          name="message"
-          value={message.message}
-          onChange={handleChange}
-          placeholder="tweety time!"
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+          placeholder="Enter a message..."
         />
-        <button>submit</button>
+        <button>Submit</button>
       </form>
     </>
   );

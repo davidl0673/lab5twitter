@@ -5,37 +5,33 @@ const jwtMiddleware = require("../helpers/jwtMiddleware");
 const Post = require("../models/Post");
 
 const router = AsyncRouter();
-const createValidators = [check("message").exists()];
-const updateValidators = [check("message").exists()];
+const createValidators = [check("message").isLength({ min: 3, max: 150 })];
+const updateValidators = [check("message").isLength({ min: 3, max: 150 })];
 
 // List
 router.get("/", async (req, res) => {
-  const posts = await Post.find();
+  const posts = await Post.find().populate("user");
 
   res.send(posts);
 });
 
 // Create
-router.post(
-  "/add-tweet",
-  [...createValidators, jwtMiddleware],
-  async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).send({ errors: errors.array() });
-    }
-
-    const post = new Post();
-    post.messege = req.body.message;
-    post.user = req.user._id;
-
-    console.log(req.body);
-
-    await post.save();
-
-    res.status(201).send(post);
+router.post("/", [...createValidators, jwtMiddleware], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).send({ errors: errors.array() });
   }
-);
+
+  const post = new Post();
+  post.message = req.body.message;
+  post.user = req.user._id;
+
+  console.log(req.body);
+
+  await post.save();
+
+  res.status(201).send(await post.populate("user").execPopulate());
+});
 
 // Read
 router.get("/:_id", async (req, res) => {
@@ -58,7 +54,7 @@ router.patch(
     if (!post) return res.sendStatus(404);
     if (req.user._id !== post.user._id) return res.sendStatus(401);
 
-    post.messege = req.body.messege;
+    post.message = req.body.message;
     await post.save();
 
     res.send(post);

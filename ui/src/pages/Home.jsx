@@ -1,42 +1,22 @@
-import React, { useGlobal, useState } from "reactn";
+import React, { useGlobal, useState, useEffect } from "reactn";
 import TweetForm from "../components/TweetForm";
 import Tweet from "../components/Tweet";
 import client from "../api/client";
+import Users from "../components/Users";
 
 const Home = () => {
   const { 0: token } = useGlobal("token");
+  const [tweets, setTweets] = useState([]);
 
-  const [tweetState, setTweetState] = useState({
-    isSubmitted: false,
-    errors: null,
-    message: ""
-  });
+  const getTweets = async () => {
+    const { data } = await client.get("/post");
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-
-    try {
-      await client.post(
-        "/post/add-tweet",
-        { message: tweetState.message },
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
-      );
-      setTweetState({
-        isSubmitted: true,
-        message: tweetState.message,
-        errors: null
-      });
-    } catch (error) {
-      setTweetState({
-        isSubmitted: false,
-        message: tweetState.message,
-        errors: error
-      });
-      console.log(error);
-    }
+    setTweets(data);
   };
+
+  useEffect(() => {
+    getTweets();
+  }, []);
 
   return (
     <>
@@ -44,12 +24,13 @@ const Home = () => {
       <div>
         {token && (
           <>
-            <TweetForm
-              handleSubmit={handleSubmit}
-              message={tweetState}
-              setMessage={setTweetState}
-            />
-            <Tweet message={tweetState} />
+            <h1>Posts</h1>
+            <TweetForm onSuccess={t => setTweets([...tweets, t])} />
+            {tweets.map(tweet => (
+              <Tweet key={tweet._id} tweet={tweet} />
+            ))}
+            <h1>Active users </h1>
+            <Users />
           </>
         )}
       </div>

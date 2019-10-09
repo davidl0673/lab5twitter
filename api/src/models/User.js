@@ -3,24 +3,34 @@ const bcrypt = require("bcrypt");
 
 const { Schema } = mongoose;
 
-const userSchema = Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
+const userSchema = Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true
+    },
+    password: {
+      type: String,
+      required: true
+    }
   },
-  password: {
-    type: String,
-    required: true,
-  },
-}, {
-  timestamps: true,
-  toJSON: {
-    virtuals: true,
-  },
-  toObject: {
-    virtuals: true,
+  {
+    timestamps: true,
+    toJSON: {
+      virtuals: true
+    },
+    toObject: {
+      virtuals: true
+    }
   }
+);
+
+userSchema.virtual("posts", {
+  ref: "Post",
+  foreignField: "user",
+  localField: "_id",
+  onlyOne: false
 });
 
 userSchema.statics.signUp = async function(email, password) {
@@ -38,12 +48,12 @@ userSchema.methods.hashPassword = function(plainText) {
 userSchema.methods.sanitize = function() {
   return {
     ...this._doc,
-    password: undefined,
-  }
-}
+    password: undefined
+  };
+};
 userSchema.methods.comparePassword = function(plainText) {
   return bcrypt.compareSync(plainText, this.password);
-}
+};
 const User = mongoose.model("User", userSchema);
 
 module.exports = User;
